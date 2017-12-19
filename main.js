@@ -60,20 +60,25 @@ function init() {
   board.style.width=square + "px";
   board.style.border = "solid #555 " + square * 0.025 + "px";
   if(other != 0)
-  board.style.marginTop = (other - square) / 2 + "px";
+    board.style.marginTop = (other - square) / 2 + "px";
 }
 
 function clickEvent(element) {
-  piece.location.x = element.className.substring(7);
-  piece.location.y = element.parentElement.className.substring(7);
-
-  if(isSpaceTaken(piece.location.x, piece.location.y) && isSameTokenType(piece.location.x, piece.location.y)) {
-    deselect(piece.selected.x, piece.selected.y);
-    select(piece.location.x, piece.location.y);
-  } else {
-    if(piece.location.x != piece.selected.x || piece.location.y != piece.selected.y) {
-      if(isSelected(piece.selected.x, piece.selected.y))
-        move();
+  piece.location.x = parseInt(element.className.substring(7));
+  piece.location.y = element.parentElement.className;
+  if(piece.location.y.indexOf("selected") == -1)
+    piece.location.y = parseInt(piece.location.y.substring(7));
+  else 
+    piece.location.y = parseInt(piece.location.y.substring(7, piece.location.y.indexOf(" selected")));
+  
+  if(piece.location.x !== piece.selected.x || piece.location.y !== piece.selected.y) {
+    if(isSpaceTaken(piece.location.x, piece.location.y) && isSameTokenType(piece.location.x, piece.location.y)) {
+      deselect(piece.selected.x, piece.selected.y);
+      select(piece.location.x, piece.location.y);
+    } else {
+      if(piece.location.x != -1 && piece.location.y != -1)
+        if(isSelected(piece.selected.x, piece.selected.y))
+          move();
     }
   }
 }
@@ -128,25 +133,28 @@ function validJumpLocations(x, y) {
   let point = {
     x: 0,
     y: 0
-  }
-
-  if(isSpaceTaken(x + 1, y-direction) && !isSameTokenType(x + 1, y - direction) && !isSpaceTaken(x + 2, y - 2 * direction)) {
+  };
+  
+  console.log(x + " " + y);
+  console.log((x + 1) + " " + (y - direction));
+  
+  if(isNotSameTokenType(x + 1, y - direction) && isSpaceNotTaken(x + 2, y - 2 * direction)) {
     point.x = x + 2;
     point.y = y - 2*direction;
     location.push(point);
   }
-  if(isSpaceTaken(x-1, y-direction) && !isSameTokenType(x - 1, y - direction) && !isSpaceTaken(x - 2, y - 2 * direction)) {
+  if(isNotSameTokenType(x - 1, y - direction) && isSpaceNotTaken(x - 2, y - 2 * direction)) {
     point.x = x-2;
     point.y = y-2*direction;
     location.push(point);
   }
   if(isKing(x, y)) {
-    if(isSpaceTaken(x+1,y+direction) && !isSameTokenType(x + 1, y + direction) && !isSpaceTaken(x + 2, y + 2 * direction)) {
+    if(isNotSameTokenType(x + 1, y + direction) && isSpaceNotTaken(x + 2, y + 2 * direction)) {
       point.x = x + 2;
       point.y = y + 2 * direction;
       location.push(point);
     }
-    if(isSpaceTaken(x-1, y + direction) && !isSameTokenType(x - 1, y + direction) && !isSpaceTaken(x - 2, y + 2 * direction)) {
+    if(isNotSameTokenType(x - 1, y + direction) && isSpaceNotTaken(x - 2, y + 2 * direction)) {
       point.x = x-2;
       point.y = y+2*direction;
       location.push(point);
@@ -192,6 +200,20 @@ function isSpaceTaken(x, y) {
   return false;
 }
 
+function isNotSameTokenType(x, y) {
+  let element = getElement(x, y);
+  if(element != null)
+   return element.children[0].className.indexOf(direction > 0 ? "two" : "one") == -1;
+  return false;
+}
+
+function isSpaceNotTaken(x, y) {
+  let element = getElement(x, y);
+  if(element != null)
+   return element.children[0].className.indexOf("active") == -1;
+  return false;
+}
+
 function getElement(x, y) {
   if(x >= 0 && x < dimension && y >= 0 && y < dimension)
     return document.getElementsByClassName("row" + y)[0].children[x];
@@ -228,7 +250,7 @@ function deselect(x, y) {
     element.className = element.className.substring(0, element.className.indexOf(" selected"));
   } 
 }
-
+  
 function isSelected(x, y) {
   let element = getElement(x, y);
   if(element != null)
