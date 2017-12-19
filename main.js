@@ -17,9 +17,12 @@ function init() {
   let other = (window.innerHeight < window.innerWidth) ? 0 : window.innerHeight;
   square -= square * 0.05;
   dimension = prompt("What are the board dimensions? A standard board is 8 locations.");
-  while(!(dimension.match("^[0-9]+$")))
+  while(dimension != null && !(dimension.match("^[0-9]+$")))
     dimension = prompt("Please enter in a valid dimension. What are the board dimensions?");
-  dimension = parseInt(dimension);
+  if(dimension != null)
+    dimension = parseInt(dimension);
+  else
+    dimension = 8;
 
   for(let i = 0; i < dimension; i++){
     let element = document.getElementsByClassName("col")[0];
@@ -134,9 +137,6 @@ function validJumpLocations(x, y) {
     x: 0,
     y: 0
   };
-  
-  console.log(x + " " + y);
-  console.log((x + 1) + " " + (y - direction));
   
   if(isNotSameTokenType(x + 1, y - direction) && isSpaceNotTaken(x + 2, y - 2 * direction)) {
     point.x = x + 2;
