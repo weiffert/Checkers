@@ -115,13 +115,13 @@ function jumpChecker(toX, toY, fromX, fromY) {
     return true;
   
   let location = validJumpLocations(fromX, fromY);
-  for(let i = 0; i < location.length; i++) {
-    swap(location[i].x, location[i].y, fromX, fromY);
-    let king = isKing((location[i].x + fromX) / 2, (location[i].y + fromY) / 2);
-    removeToken((location[i].x + fromX) / 2, (location[i].y + fromY) / 2);
-    if(!jumpChecker(toX, toY, location[i].x, location[i].y)) {
-      swap(location[i].x, location[i].y, fromX, fromY);
-      addToken((location[i].x + fromX) / 2, (location[i].y + fromY) / 2, direction < 0 ? "two":"one", king);
+  for(let index = 0; index < location.length; index++) {
+    swap(location[index].x, location[index].y, fromX, fromY);
+    let king = isKing((location[index].x + fromX) / 2, (location[index].y + fromY) / 2);
+    removeToken((location[index].x + fromX) / 2, (location[index].y + fromY) / 2);
+    if(!jumpChecker(toX, toY, location[index].x, location[index].y)) {
+      swap(location[index].x, location[index].y, fromX, fromY);
+      addToken((location[index].x + fromX) / 2, (location[index].y + fromY) / 2, direction < 0 ? "two":"one", king);
     } else {
       return true;
     }
