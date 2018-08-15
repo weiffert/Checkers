@@ -1,4 +1,4 @@
-# Checkers
+# [Checkers](https://weiffert.github.io/checkers/)
 
 This is a vanilla javascript checkers game. The catch with this game is it is made with no underlying data. It gets locations and types of pieces from the html directly for each move. The system does not enforce any rules except for standard diagonal moves and jump chaining, since the only data being stored is the selected token to move. 
 
